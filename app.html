@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background: #f9f7fe;
+        font-family: "Roboto", sans-serif;
+      }
+
+      a {
+        color: #885df1;
+      }
+
+      .weather-app {
+        background: white;
+        max-width: 600px;
+        margin: 60px auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 30px 50px rgba(65, 50, 100, 0.08);
+      }
+
+      header {
+        border-bottom: 1px solid #f9f7fe;
+        padding-bottom: 30px;
+      }
+
+      .search-input {
+        background-color: #f9f7fe;
+        border: none;
+        color: rgba(39, 33, 66, 0.4);
+        font-size: 16px;
+        padding: 20px;
+        width: 75%;
+        border-radius: 6px;
+      }
+
+      .search-button {
+        margin-left: 5px;
+        font-size: 16px;
+        background-color: #885df1;
+        color: white;
+        border: none;
+        padding: 20px;
+        line-height: 1;
+        border-radius: 5px;
+      }
+
+      main {
+        padding: 30px 0;
+      }
+
+      .current-temperature {
+        font-size: 48px;
+      }
+
+      .daysForecast {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      h1 {
+        font-size: 38px;
+        font-weight: 900;
+        margin-right: 0;
+      }
+      .current-details {
+        color: rgba(39, 33, 66, 0.4);
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+      }
+
+      .current-details strong {
+        color: #f65282;
+      }
+
+      .temperature {
+        position: relative;
+        top: -2px;
+        font-size: 40px;
+        margin-right: 10px;
+        font-size: 60px;
+        font-weight: bold;
+      }
+
+      footer {
+        border-top: 1px solid #f9f7fe;
+        text-align: center;
+        padding-top: 15px;
+
+        color: rgba(39, 33, 66, 0.4);
+      }
+      .Days {
+        display: inline-block;
+        justify-content: space-evenly;
+        margin-right: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="weather-app">
+      <header>
+        <form id="city-form">
+          <input
+            type="search"
+            placeholder="Enter a city.."
+            required
+            autocomplete="off"
+            autofocus="on"
+            id="search-input"
+            class="search-input"
+          />
+          <input type="submit" value="Search" class="search-button" />
+        </form>
+      </header>
+      <main>
+        <hr />
+        <h1 id="current-city" clsss="current-city">San Francisco</h1>
+        <ul>
+          <div class="daysForecast">
+            <p class="current-details">
+              <span id="currentDateTime"> Thursday 13:28, </span> broken clouds
+              <br />Humidity: <strong>88%</strong>, Wind:
+              <strong>3.09km/h</strong>
+            </p>
+            <div class="temperature">11&deg;C☁️</div>
+          </div>
+        </ul>
+
+        <script>
+          function displayTemp(response) {
+            let cityElement = document.querySelector("#current-city");
+            cityElement.innerHTML = response.data.city;
+            let currentTemp = document.querySelector(`.temperature`);
+            currentTemp.innerHTML = Math.round(
+              response.data.temperature.current
+            );
+          }
+
+          function searchCity(event) {
+            event.preventDefault();
+            let searchInput = document.querySelector("#search-input");
+            let city = document.querySelector("#current-city");
+            city.innerHTML = searchInput.value;
+            searchCity(searchInput.value);
+          }
+          function searchCity(city) {
+            let apiKey = "b4d2co106b6afft0ba0061743844e626";
+            let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}`;
+
+            axios.get(apiUrl).then(displayTemp);
+          }
+
+          let form = document.querySelector("#city-form");
+          form.addEventListener("submit", searchCity);
+
+          let now = new Date();
+          let hours = now.getHours();
+          if (hours < 10) {
+            hours = `0${minutes}`;
+          }
+          let minutes = now.getMinutes();
+          if (minutes < 10) {
+            minutes = `0${minutes}`;
+          }
+
+          let days = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ];
+          let day = days[now.getDay()];
+          let currentDateTime = document.querySelector("#currentDateTime");
+          currentDateTime.innerHTML = `${day} ${hours}:${minutes}`;
+        </script>
+      </main>
+      <footer>
+        This project was coded by Mmaneo Khoaele and is
+        <a href="#"> open-sourced on GitHUb</a> and
+        <a href="#">hosted on Netlify</a>
+      </footer>
+    </div>
+  </body>
+</html>
